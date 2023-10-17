@@ -1,0 +1,91 @@
+Optimal Humidity%       moisture level
+
+Cucumbers	h=85-95,m=80%,t=75-85f
+Onions	        h=65-75,m=should not drop below 75%,t13-24˚C and 16-25˚C,
+Potatoes	h=90-95,m= 80 to 90% FC,t=between 12 and 18°C
+Tamatoes        h=65-85%,s=60-80%,t=21-24°C.
+chilli          h=50-60%, s=50% - 70%, t=minimum night temperature of 12°C (54°F), but will grow better if kept above 15°C (59°F).
+brinjal         h,s=not lowerthan -60%,t=13-21C.
+ladysfinger     h=,s=evenly damp but not saturated. t=22-35°c.
+carrots         h=85-95%,s=80%,t=15°C to 20°C
+radish          h= 60-70%,s=3 cups (700 ml) of water per square foot of soil,t=10-18 degrees Celsius
+lemon           h=50%,s=84.53% the majority of flowers, trees, and shrubs require moisture levels between 21% - 40%, while all vegetables                          require soil moisture between 41% and 80%,t=18c.
+
+HERBS
+
+coriander       h=less than 50%,s=Keep the soil consistently moist but not waterlogged,t=20 – 25 °C
+Spinach	        h=95-100,m=keep the soil evenly moist, but not wet.,t=10°C - 22°C.
+basil           h=40–60%,s=1 inch of water every week,t=b/w 80 and 90f. 
+peppermint      h=25%,s=prefers moisture but cannot tolerate waterlogging,t=65~75℉(18~25℃).
+betel leaf      h=40-80%,s=78.8%t=15-40c.
+money plant     h=50%,s=50-70%,t=15-24c.
+curry leaves    h=50%,s=,t=26-37c.
+
+DECORATIVE PLANT 
+
+alovera          h=40%,s=less watering is enough (dry soil)t=18-24c.
+
+
+
+soil moisture All vegetables - b/w 41-80%
+humidity -majority of fruits and vegetables is 90-95 percent;  
+temperature for Fresh fruits and vegetables need low temperatures (32 to 55°F) 
+
+
+
+
+
+Raspberry Pi Tutorials to connect DHT11 with New Blynk2.0:
+https://www.nuttyengineer.com/knowledge-blog/dht11-new-blynk2-with-raspberry-pi/
+
+
+
+
+
+
+DHT11 CODE
+import BlynkLib
+import RPi.GPIO as GPIO
+from BlynkTimer import BlynkTimer
+
+import Adafruit_DHT
+import time
+
+DHT_SENSOR = Adafruit_DHT.DHT11
+DHT_PIN = 4
+#BLYNK_AUTH_TOKEN = 'kt85ldXRL362juNQiymMClUUxdsuygTN'
+BLYNK_AUTH_TOKEN = 'jsfpl_ACPJIVDdkFJ9THE5PkCVvYR8FS'
+
+# Initialize Blynk
+blynk = BlynkLib.Blynk(BLYNK_AUTH_TOKEN)
+
+# Create BlynkTimer Instance
+timer = BlynkTimer()
+
+
+# function to sync the data from virtual pins
+@blynk.on("connected")
+def blynk_connected():
+    print("Hi, You have Connected to New Blynk2.0")
+    print(".......................................................")
+    print("................... By SME Dehradun ...................")
+    time.sleep(2);
+
+# Functon for collect data from sensor & send it to Server
+def myData():
+    humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+    if humidity is not None and temperature is not None:
+        print("Temp={0:0.1f}C Humidity={1:0.1f}%".format(temperature, humidity))
+    else:
+        print("Sensor failure. Check wiring.");
+
+    blynk.virtual_write(0, humidity,)
+    blynk.virtual_write(1, temperature)
+    print("Values sent to New Blynk Server!")
+
+timer.set_interval(2, myData)
+
+
+while True:
+    blynk.run()
+    timer.run()
